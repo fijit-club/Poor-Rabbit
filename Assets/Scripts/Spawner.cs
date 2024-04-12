@@ -30,5 +30,9 @@ public class Spawner : MonoBehaviour
         obj.SetActive(true);
         obj.GetComponent<Rigidbody2D>().velocity = direction * speed;
         obj.transform.position = SpawnPos[Random.Range(0, SpawnPos.Length)].position;
+        if (prefab == ObjectPooler.Prefabs.cannon)
+        {
+            GameManager.Instance.CannonEffect(SpawnPos[Random.Range(0, SpawnPos.Length)]);
+        }
     }
 }
