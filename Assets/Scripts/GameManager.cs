@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class GameManager : MonoBehaviour
     {
         SpawnCarrots();
         StartCoroutine(ActivateRandomWeapons());
+
+        for(int i=0;i< weapons.Length; i++)
+        {
+            availableIndices.Add(i);
+        }
     }
 
     private void Update()
@@ -43,17 +49,28 @@ public class GameManager : MonoBehaviour
         Destroy(Instantiate(cannonEffect, pos.position-new Vector3(0,0.15f,0),Quaternion.identity,transform), 1f);
     }
 
+    public void Reload()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     private IEnumerator ActivateRandomWeapons()
     {
         while (true)
         {
-            int randomIndex = Random.Range(0, weapons.Length);
-            yield return new WaitForSeconds(20);
-            if (!availableIndices.Contains(randomIndex))
+            yield return new WaitForSeconds(5f);
+
+            if (availableIndices.Count == 0)
             {
-                availableIndices.Add(randomIndex);
-                weapons[randomIndex].SetActive(true);
+                Debug.Log("No more weapons available.");
+                yield break;
             }
+
+            int randomIndex = Random.Range(0, availableIndices.Count);
+            int index = availableIndices[randomIndex];
+            availableIndices.RemoveAt(randomIndex);
+
+            weapons[index].SetActive(true);
         }
     }
 }
