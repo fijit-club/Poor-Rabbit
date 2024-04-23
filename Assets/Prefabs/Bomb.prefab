@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8267867821094225311}
   m_Layer: 0
   m_Name: Bomb
-  m_TagString: Arrow
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48,9 +48,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0127619505, y: -0.16}
+  m_Offset: {x: 0, y: -0.11}
   serializedVersion: 2
-  m_Radius: 0.28723806
+  m_Radius: 0.2
 --- !u!114 &6401035512385542680
 MonoBehaviour:
   m_ObjectHideFlags: 0

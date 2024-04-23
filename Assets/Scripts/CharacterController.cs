@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
+    public static CharacterController Instance;
+    public int scoreMultiplier;
+    public int coinMultiplier;
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
     public Rigidbody2D rb;
@@ -11,10 +14,12 @@ public class CharacterController : MonoBehaviour
     public LayerMask groundLeyer;
     private bool isFacingRight;
     private float horizintal;
+    private int score;
+    private int coins;
 
     private void Awake()
     {
-        
+        Instance = this;
     }
 
     private void FixedUpdate()
@@ -46,14 +51,24 @@ public class CharacterController : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
+
+        GameManager.Instance.UpdateCoinAndScore();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Food"))
         {
+            SoundManager.Instance.PlaySound(SoundManager.Sounds.CarrotPick);
             collision.gameObject.SetActive(false);
             GameManager.Instance.SpawnCarrots();
+            AddCoins(1);
+            AddScore(100);
+            GameManager.Instance.CoinAnimation(1, collision.transform.position);
+        }
+        if (collision.CompareTag("Enemy"))
+        {
+            GameManager.Instance.GameOver();
         }
     }
 
@@ -68,9 +83,27 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    private void AddCoins(int value)
+    {
+        coins += value * coinMultiplier;
+    }
+
+    private void AddScore(int value)
+    {
+        score += value * scoreMultiplier;
+    }
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLeyer);    }
+        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLeyer);  
+    }
 
+    public int GetScore()
+    {
+        return score;
+    }
 
+    public int GetCoins()
+    {
+        return coins;
+    }
 }

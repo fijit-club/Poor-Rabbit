@@ -77,13 +77,11 @@ public class SoundManager : MonoBehaviour
 
     public  enum Sounds
     {
-        CarEngine,
-        GasPick,
+        CarrotPick,
         BGM,
         PurchaseSuccess,
         PurchaseFail,
         EndGame,
-        CoinPick,
         ButtonClick
     }
 

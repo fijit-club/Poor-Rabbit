@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,27 +10,43 @@ public class GameManager : MonoBehaviour
     public Transform[] carrotSpawnPos;
     public GameObject cannonEffect;
     public GameObject[] weapons;
+    public GameObject gameOverScreen;
     private List<int> availableIndices = new List<int>();
+    public bool isGameOver;
+    public TextMeshProUGUI scoreTxt;
+    public TextMeshProUGUI highScoreTxt;
+    public TextMeshProUGUI coinTxt;
+    public RectTransform parent;
+    public RectTransform coinDestination;
+    public GameObject coinPref;
+    public GameObject arrowSpawner;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    private void Start()
+    private void OnEnable()
     {
+        Shop.onGameBegin += GameBegin;
+    }
+
+    private void OnDisable()
+    {
+        Shop.onGameBegin -= GameBegin;
+    }
+
+    private void GameBegin()
+    {
+        SoundManager.Instance.PlaySoundLoop(SoundManager.Sounds.BGM);
         SpawnCarrots();
         StartCoroutine(ActivateRandomWeapons());
 
-        for(int i=0;i< weapons.Length; i++)
+        for (int i = 0; i < weapons.Length; i++)
         {
             availableIndices.Add(i);
         }
-    }
-
-    private void Update()
-    {
-        
+        arrowSpawner.SetActive(true);
     }
 
     public void SpawnCarrots()
@@ -58,7 +75,7 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(15f);
 
             if (availableIndices.Count == 0)
             {
@@ -72,5 +89,37 @@ public class GameManager : MonoBehaviour
 
             weapons[index].SetActive(true);
         }
+    }
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        gameOverScreen.SetActive(true);
+        Time.timeScale = 0;
+        Pause.Instance.gamePanel.SetActive(false);
+        SoundManager.Instance.PlaySound(SoundManager.Sounds.EndGame);
+    }
+
+    public void CoinAnimation(int count, Vector2 pos)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GameObject coin = Instantiate(coinPref, parent);
+            coin.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(pos);
+            float delayTime = 0.1f;
+            LeanTween.delayedCall(delayTime, () =>
+            {
+                LeanTween.move(coin, coinDestination.position, 0.5f)
+                         .setEase(LeanTweenType.animationCurve)
+                         .setOnComplete(() => { Destroy(coin); Bridge.GetInstance().UpdateCoins(1); });
+            });
+        }
+    }
+
+    public void UpdateCoinAndScore()
+    {
+        scoreTxt.text = CharacterController.Instance.GetScore().ToString();
+        coinTxt.text = CharacterController.Instance.GetScore().ToString();
+        highScoreTxt.text = Bridge.GetInstance().thisPlayerInfo.highScore.ToString();
     }
 }

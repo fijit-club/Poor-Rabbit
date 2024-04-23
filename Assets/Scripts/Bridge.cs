@@ -4,10 +4,8 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System;
 using System.Runtime.InteropServices;
-//using Newtonsoft.Json;
+using Newtonsoft.Json;
 using TMPro;
-//using LightDev;
-
 public class NativeAPI
     {
 #if UNITY_IOS && !UNITY_EDITOR
@@ -116,21 +114,21 @@ public class NativeAPI
         }
 
 
-//    public void SaveData(int value)
-//    {
-//        thisPlayerInfo.data.saveData.value = value;
+    public void SaveData(int value)
+    {
+        thisPlayerInfo.data.saveData.value = value;
 
-//        string jsonData = JsonConvert.SerializeObject(thisPlayerInfo.data.saveData);
+        string jsonData = JsonConvert.SerializeObject(thisPlayerInfo.data.saveData);
 
-//        print("DATA BEFORE SENDING: " + jsonData);
+        print("DATA BEFORE SENDING: " + jsonData);
 
-//#if UNITY_WEBGL && !UNITY_EDITOR
-//                setSavedata(jsonData);
-//#endif
+#if UNITY_WEBGL && !UNITY_EDITOR
+                setSavedata(jsonData);
+#endif
 
-//        print("DATA AFTER SENDING: " + jsonData);
+        print("DATA AFTER SENDING: " + jsonData);
 
-//    }
+    }
 
     private void Awake()
         {
@@ -225,7 +223,7 @@ public class NativeAPI
         if (thisPlayerInfo.data.assets.Count == 0)
             {
                 Debug.Log("buying default cannon");
-                //BuyPete("pete-1");
+                BuyPete("poor-bunny-basic");
             }
 
             if (thisPlayerInfo.sound)

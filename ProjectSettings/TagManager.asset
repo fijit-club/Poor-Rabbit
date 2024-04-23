@@ -5,9 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
-  - Arrow
   - Path
   - Food
+  - Enemy
+  - Arrow
   layers:
   - Default
   - TransparentFX
