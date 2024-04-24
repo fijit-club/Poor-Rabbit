@@ -60,12 +60,12 @@ public class CharacterController : MonoBehaviour
     {
         if (collision.CompareTag("Food"))
         {
+            GameManager.Instance.CoinAnimation(1, collision.gameObject.transform.position);
             SoundManager.Instance.PlaySound(SoundManager.Sounds.CarrotPick);
             collision.gameObject.SetActive(false);
             GameManager.Instance.SpawnCarrots();
             AddCoins(1);
             AddScore(100);
-            GameManager.Instance.CoinAnimation(1, collision.transform.position);
         }
         if (collision.CompareTag("Enemy"))
         {
