@@ -16,6 +16,7 @@ public class CharacterController : MonoBehaviour
     private float horizintal;
     private int score;
     private int coins;
+    public Transform regeneratePoint;
 
     private void Awake()
     {
@@ -68,7 +69,7 @@ public class CharacterController : MonoBehaviour
         }
         if (collision.CompareTag("Enemy"))
         {
-            GameManager.Instance.GameOver();
+            ReviveController.Instance.GameEnd();
         }
     }
 
@@ -81,6 +82,11 @@ public class CharacterController : MonoBehaviour
             localScale.x *= -1;
             transform.localScale = localScale;
         }
+    }
+
+    public void Revive()
+    {
+        transform.position = regeneratePoint.position;
     }
 
     private void AddCoins(int value)
